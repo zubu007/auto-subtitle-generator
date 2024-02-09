@@ -4,6 +4,10 @@ import cv2
 from moviepy.editor import ImageSequenceClip, AudioFileClip, VideoFileClip
 from tqdm import tqdm
 
+FONT = cv2.FONT_HERSHEY_SIMPLEX
+FONT_SCALE = 0.8
+FONT_THICKNESS = 2
+
 class VideoTranscriber:
     def __init__(self, model_path, video_path):
         self.model = whisper.load_model(model_path)
@@ -17,7 +21,7 @@ class VideoTranscriber:
         print('Transcribing video')
         result = self.model.transcribe(self.audio_path)
         text = result["segments"][0]["text"]
-        textsize = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, 0.8, 2)[0]
+        textsize = cv2.getTextSize(text, FONT, FONT_SCALE, FONT_THICKNESS)[0]
         cap = cv2.VideoCapture(self.video_path)
         width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
         height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
@@ -67,7 +71,7 @@ class VideoTranscriber:
         cap.release()
         print('Transcription complete')
     
-    def extract_audio(self, output_audio_path='test_videos/audio.mp3'):
+    def extract_audio(self, output_audio_path):
         print('Extracting audio')
         video = VideoFileClip(self.video_path)
         audio = video.audio 
@@ -129,8 +133,9 @@ class VideoTranscriber:
 model_path = "base"
 video_path = "test_videos/videoplayback.mp4"
 output_video_path = "test_videos/output.mp4"
+output_audio_path = "test_videos/audio.mp3"
 
 transcriber = VideoTranscriber(model_path, video_path)
-transcriber.extract_audio()
+transcriber.extract_audio(output_audio_path=output_audio_path)
 transcriber.transcribe_video()
 transcriber.create_video(output_video_path)
