@@ -9,4 +9,3 @@ The program generates subtitles in the format on instagram, facebook reels/youtu
 - [ ] Add command line inputs using python argument parser
 - [ ] Create variables for text size and font.
 - [ ] Control number of words shown together with a variable
-- [ ] Fix text coming out issue.

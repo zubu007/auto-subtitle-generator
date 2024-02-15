@@ -48,7 +48,7 @@ class VideoTranscriber:
                 if words[i] == "":
                     i += 1
                     continue
-                length_in_pixels = len(words[i]) * self.char_width
+                length_in_pixels = (len(words[i]) + 1) * self.char_width
                 remaining_pixels = width - length_in_pixels
                 line = words[i] 
                 
@@ -56,7 +56,7 @@ class VideoTranscriber:
                     i += 1 
                     if i >= len(words):
                         break
-                    length_in_pixels = len(words[i]) * self.char_width
+                    length_in_pixels = (len(words[i]) + 1) * self.char_width
                     remaining_pixels -= length_in_pixels
                     if remaining_pixels < 0:
                         continue
