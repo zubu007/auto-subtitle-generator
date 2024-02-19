@@ -1,8 +1,21 @@
-The program generates subtitles in the format on instagram, facebook reels/youtube shorts and tiktok videos which are trending. 
-
+#     auto-subtitle-generator
+A program that generates subtitles in the format of instagram and facebook reels, youtube shorts and tiktok videos.
+*** 
 ### Installation and usage:
-1. Install the necessary python packages in your environment using "pip install -r requirements.txt"
-2. Run the python script using "python3 main.py
+1. If using git to download repo type: `git clone https://github.com/zubu007/auto-subtitle-generator.git` 
+2. Install [ffmpeg](https://ffmpeg.org)
+   * On Windows
+     * Install [Chocolately](https://chocolatey.org/install) and type `choco install ffmpeg` 
+   * On Linux
+     * `sudo apt install ffmpeg`
+       
+3. Install the necessary python packages in your environment using `pip install -r requirements.txt`
+4. Create a folder called `test_videos` in the source and put your video inside with the name `"videoplayback.mp4"` 
+5. Run the python script
+   * Windows:  `python main.py`
+   * Linux:  `python3 main.py`
+
+*** 
 
 ### TODO
 - [ ] Update this read.me to make professional
