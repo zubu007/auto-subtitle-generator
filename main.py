@@ -72,12 +72,13 @@ class VideoTranscriber:
         cap.release()
         print('Transcription complete')
     
-    def extract_audio(self, output_audio_path):
+    def extract_audio(self):
         print('Extracting audio')
+        audio_path = os.path.join(os.path.dirname(self.video_path), "audio.mp3")
         video = VideoFileClip(self.video_path)
         audio = video.audio 
-        audio.write_audiofile(output_audio_path)
-        self.audio_path = output_audio_path
+        audio.write_audiofile(audio_path)
+        self.audio_path = audio_path
         print('Audio extracted')
     
     def extract_frames(self, output_folder):
@@ -136,10 +137,10 @@ class VideoTranscriber:
 model_path = "base"
 video_path = "test_videos/videoplayback.mp4"
 output_video_path = "test_videos/output.mp4"
-output_audio_path = "test_videos/audio.mp3"
+# output_audio_path = "test_videos/audio.mp3"
 
 transcriber = VideoTranscriber(model_path, video_path)
-transcriber.extract_audio(output_audio_path=output_audio_path)
+transcriber.extract_audio()
 transcriber.transcribe_video()
 transcriber.create_video(output_video_path)
     
