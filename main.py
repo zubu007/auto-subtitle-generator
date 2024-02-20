@@ -1,5 +1,6 @@
 import whisper
 import os
+import shutil
 import cv2
 from moviepy.editor import ImageSequenceClip, AudioFileClip, VideoFileClip
 from tqdm import tqdm
@@ -128,6 +129,8 @@ class VideoTranscriber:
         audio = AudioFileClip(self.audio_path)
         clip = clip.set_audio(audio)
         clip.write_videofile(output_video_path)
+        shutil.rmtree(image_folder)
+        os.remove(os.path.join(os.path.dirname(self.video_path), "audio.mp3"))
 
 # Example usage
 model_path = "base"
@@ -139,3 +142,4 @@ transcriber = VideoTranscriber(model_path, video_path)
 transcriber.extract_audio(output_audio_path=output_audio_path)
 transcriber.transcribe_video()
 transcriber.create_video(output_video_path)
+    
