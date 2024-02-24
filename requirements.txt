@@ -2,4 +2,4 @@ opencv-python
 tqdm
 whisper
 moviepy
-tkinter
+customtkinter
