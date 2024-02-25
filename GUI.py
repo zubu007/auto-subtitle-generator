@@ -94,8 +94,7 @@ label.place(relx=0.5, rely=0.3,anchor="center")
 model = CTkComboBox(master=app, values=["Whisper" , "Model 1" , "Model 2"])
 model.place(relx=0.5, rely=0.4,anchor="center")
 
-#Process video button
-processBtn = CTkButton(master=app,text="Process video",command=StartVideoProcess)
+
 processBtn.place(relx=0.5, rely=0.7,anchor="center")
 
 app.mainloop()
