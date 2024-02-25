@@ -23,8 +23,10 @@ A program that generates subtitles in the format of instagram and facebook reels
 - [ ] Create variables for text size and font.
 - [ ] Control number of words shown together with a variable
 - [ ] Add support for multiple languages
-- [ ] Create a GUI for the program
-- [ ] Design UI for the program
 - [ ] Add support for multiple video formats
 - [ ] Add support for multiple video resolutions
 - [ ] Add comments to the code
+
+### Done
+- [x] Create a GUI for the program
+- [x] Design UI for the program
