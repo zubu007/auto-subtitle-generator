@@ -1,5 +1,5 @@
 opencv-python
 tqdm
-whisper
+openai-whisper
 moviepy
 customtkinter
