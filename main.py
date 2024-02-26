@@ -119,7 +119,6 @@ class VideoTranscriber:
         
         self.extract_frames(image_folder)
         
-        print("Video saved at:", output_video_path)
         images = [img for img in os.listdir(image_folder) if img.endswith(".jpg")]
         images.sort(key=lambda x: int(x.split(".")[0]))
         
