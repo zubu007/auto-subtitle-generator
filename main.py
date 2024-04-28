@@ -161,3 +161,13 @@ model_path = "base"
 # video_path = "test_videos/videoplayback.mp4"
 output_video_path = "output.mp4"
 # output_audio_path = "test_videos/audio
+
+if __name__ == "__main__":
+    model_path = "path/to/model"
+    video_path = "path/to/video"
+    output_video_path = "path/to/output/video"
+
+    transcriber = VideoTranscriber(model_path, video_path)
+    transcriber.extract_audio()
+    transcriber.transcribe_video()
+    transcriber.create_video(output_video_path)
