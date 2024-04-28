@@ -9,31 +9,35 @@ Auto Subtitle Generator is a program that generates subtitles in the format of I
 1. If using Git to download the repository, type the following command in your terminal:
    ```bash
    git clone https://github.com/zubu007/auto-subtitle-generator.git
+   ```
 
-2. Install [ffmpeg](https://ffmpeg.org)
-   * Windows
-     * Install [Chocolately](https://chocolatey.org/install) and type the following command in your terminal:
+2. Install [FFmpeg](https://ffmpeg.org):
+   - **Windows:**
+     - Install [Chocolately](https://chocolatey.org/install) and run:
        ```bash
        choco install ffmpeg
-   * Linux
+       ```
+   - **Linux:**
      ```bash
      sudo apt install ffmpeg
+     ```
        
 3. Install the necessary Python packages in your environment using pip:
    ```bash
    pip install -r requirements.txt
+   ```
    
-5. Run the Python script:
-   * Windows:
+4. Run the Python script:
+   - Windows:
      ```bash
      python main.py
-   * Linux:
+     ```
+   - Linux:
      ```bash
      python3 main.py
+     ```
 
-*** 
-
-### TODO
+## TODO
 - [ ] Control number of words shown together with a variable.
 - [ ] Add support for multiple languages.
 - [ ] Add support for multiple video formats.
@@ -41,7 +45,7 @@ Auto Subtitle Generator is a program that generates subtitles in the format of I
 - [ ] Add option to select font color.
 - [ ] Font size option.
 
-### Done
+## Done
 - [x] Create a GUI for the program.
 - [x] Design UI for the program.
 - [x] Create variables for text size and font.
