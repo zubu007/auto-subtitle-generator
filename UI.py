@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import filedialog
+from tkinter import filedialog, messagebox
 
 class VideoProcessor:
     def __init__(self):
@@ -13,20 +13,32 @@ class VideoProcessor:
         self.setup_ui()
 
     def process_video(self):
-        # Get the selected video file path
-        video_file_path = filedialog.askopenfilename()
+        try:
+            # Get the selected video file path
+            video_file_path = filedialog.askopenfilename()
+            
+            if not video_file_path:
+                messagebox.showwarning("Warning", "No video file selected.")
+                return
 
-        # Get the selected model from the dropdown menu
-        selected_model = self.model_dropdown.get()
+            # Get the selected model from the dropdown menu
+            selected_model = self.model_dropdown.get()
 
-        # Get the output file name and location
-        output_file_path = self.output_entry.get()
+            # Get the output file name and location
+            output_file_path = self.output_entry.get()
 
-        # Process the video using the selected model and output file path
-        # Add your code here
+            if not output_file_path:
+                messagebox.showwarning("Warning", "Please enter an output file path.")
+                return
 
-        # Display a success message
-        self.result_label.config(text="Video processed successfully!")
+            # Process the video using the selected model and output file path
+            # Placeholder for video processing code
+            # Add your code here
+            
+            # Display a success message
+            self.result_label.config(text="Video processed successfully!")
+        except Exception as e:
+            messagebox.showerror("Error", f"Error processing video: {e}")
 
     def setup_ui(self):
         # Create a label for the video file selection
