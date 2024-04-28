@@ -3,3 +3,4 @@ tqdm
 openai-whisper
 moviepy
 customtkinter
+whisper
