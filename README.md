@@ -11,8 +11,8 @@ A program that generates subtitles in the format of instagram and facebook reels
        
 3. Install the necessary python packages in your environment using `pip install -r requirements.txt` 
 4. Run the python script
-   * Windows:  `python main.py`
-   * Linux:  `python3 main.py`
+   * Windows:  `python GUI.py`
+   * Linux:  `python3 GUI.py`
 
 *** 
 
