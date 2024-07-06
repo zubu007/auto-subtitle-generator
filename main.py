@@ -5,9 +5,14 @@ import cv2
 from moviepy.editor import ImageSequenceClip, AudioFileClip, VideoFileClip
 from tqdm import tqdm
 
+# Constant parameters to change with the interface
 FONT = cv2.FONT_HERSHEY_SIMPLEX
 FONT_SCALE = 0.8
 FONT_THICKNESS = 2
+# cropping parameters
+CROP_PERCENTAGE = 0
+CROP_FILL_BLUR_FLAG = False
+CROP_FILL_COLOR = (0, 0, 0)
 
 class VideoTranscriber:
     def __init__(self, model_path, video_path):
