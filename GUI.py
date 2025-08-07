@@ -5,11 +5,11 @@ import threading as th
 
 #printing message before importing main
 print ("Starting...")
-import main
+from main import VideoTranscriber
 
 #variables
-main.video_path = ""
 processing = False #checks if the program is processing a video or not
+video_path = "" #path to the video file
 
 #creating the window
 app  = CTk ()
@@ -28,7 +28,7 @@ dotsLabel.place(relx=0.5, rely=0.9,anchor="center")
 #Event handling methods
 #Selecting the video
 def Browse():
-    main.video_path = filedialog.askopenfilename()
+    video_path = filedialog.askopenfilename()
 
 dots="." #a string that will be used for the Dots() method
 count = 0
@@ -51,10 +51,10 @@ def Dots (): # This method gives feedback to the player that the program is stil
 
 def ProcessVideo (): 
     global processing
-    if (main.video_path != ""):
+    if (video_path != ""):
         processLabel.configure(text="Creating video... ")
         processLabel.update()
-        main.transcriber = main.VideoTranscriber(main.model_path, main.video_path)
+        transcriber = VideoTranscriber(model.get(), video_path)
 
         main.transcriber.extract_audio()
         processLabel.configure(text="Extracting audio... ")
