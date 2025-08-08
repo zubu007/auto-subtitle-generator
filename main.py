@@ -127,7 +127,7 @@ class VideoTranscriber:
         
         clip = ImageSequenceClip([os.path.join(image_folder, image) for image in images], fps=self.fps)
         audio = AudioFileClip(self.audio_path)
-        clip = clip.set_audio(audio)
+        clip.audio = audio
         clip.write_videofile(output_video_path)
         shutil.rmtree(image_folder)
         os.remove(os.path.join(os.path.dirname(self.video_path), "audio.mp3"))

@@ -38,3 +38,5 @@ A program that generates subtitles in the format of instagram and facebook reels
 - [x] Design UI for the program
 - [x] Create variables for text size and font.
 
+### Issues
+* Subtitle alingment with the voice can be improved.

@@ -10,6 +10,7 @@ from main import VideoTranscriber
 #variables
 processing = False #checks if the program is processing a video or not
 video_path = "" #path to the video file
+output_video_path = "" #path to the output video file
 
 #creating the window
 app  = CTk ()
@@ -28,7 +29,9 @@ dotsLabel.place(relx=0.5, rely=0.9,anchor="center")
 #Event handling methods
 #Selecting the video
 def Browse():
-    video_path = filedialog.askopenfilename()
+    global video_path, output_video_path
+    video_path  = filedialog.askopenfilename()
+    output_video_path = video_path.split("/")[-1].split(".")[0] + "_subtitled.mp4"
 
 dots="." #a string that will be used for the Dots() method
 count = 0
@@ -56,16 +59,16 @@ def ProcessVideo ():
         processLabel.update()
         transcriber = VideoTranscriber(model.get(), video_path)
 
-        main.transcriber.extract_audio()
+        transcriber.extract_audio()
         processLabel.configure(text="Extracting audio... ")
         processLabel.update()
 
-        main.transcriber.transcribe_video()
+        transcriber.transcribe_video()
         processLabel.configure(text="Transcribing video... ")
         processLabel.update()
 
-        main.transcriber.create_video(main.output_video_path)
-        processLabel.configure(text="Video created at: " + main.output_video_path)
+        transcriber.create_video(output_video_path)
+        processLabel.configure(text="Video created at: " + output_video_path)
         processLabel.update()
         processing = False
     else:
@@ -91,7 +94,7 @@ btn.place(relx=0.5,rely=0.2,anchor="center")
 label = CTkLabel(master=app, text="Select model",font=("Arial" , 20), text_color="#FFCC70")
 label.place(relx=0.5, rely=0.3,anchor="center")
 
-model = CTkComboBox(master=app, values=["Whisper" , "Model 1" , "Model 2"])
+model = CTkComboBox(master=app, values=["tiny.en" , "base.en" , "small.en"])
 model.place(relx=0.5, rely=0.4,anchor="center")
 
 font = CTkComboBox(master=app, values=["Arial" , "Times New Roman" , "Courier"])
