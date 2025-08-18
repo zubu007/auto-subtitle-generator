@@ -1,4 +1,6 @@
 import whisper
+import re
+import subprocess
 import os
 import shutil
 import cv2
@@ -16,62 +18,40 @@ class VideoTranscriber:
         self.audio_path = ''
         self.text_array = []
         self.fps = 0
-        self.char_width = 0
+        # self.char_width = 0
+        self.max_width = 0
+        self.width = 0
 
     def transcribe_video(self):
         print('Transcribing video')
-        result = self.model.transcribe(self.audio_path)
-        text = result["segments"][0]["text"]
-        textsize = cv2.getTextSize(text, FONT, FONT_SCALE, FONT_THICKNESS)[0]
-        cap = cv2.VideoCapture(self.video_path)
-        width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-        height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        asp = 16/9
-        ret, frame = cap.read()
-        width = frame[:, int(int(width - 1 / asp * height) / 2):width - int((width - 1 / asp * height) / 2)].shape[1]
-        width = width - (width * 0.1)
-        self.fps = cap.get(cv2.CAP_PROP_FPS)
-        self.char_width = int(textsize[0] / len(text))
+        if not os.path.exists(self.video_path):
+            raise FileNotFoundError(f"Video file {self.video_path} does not exist.")
+        # Detect silence offset
+        silence_offset = self.detect_silence_offset(self.video_path)
+        result = self.model.transcribe(self.video_path, task="transcribe")
+        self.text_array = result['segments']
+        if silence_offset > 0:
+            self.text_array[0]['start'] += silence_offset
+
+    def detect_silence_offset(self, file_path, noise_threshold="-30dB", min_silence=0.5):
+        """
+        Returns the end of the initial silence (in seconds), or 0 if none found.
+        """
+        cmd = [
+            "ffmpeg", "-i", file_path,
+            "-af", f"silencedetect=noise={noise_threshold}:d={min_silence}",
+            "-f", "null", "-"
+        ]
         
-        for j in tqdm(result["segments"]):
-            lines = []
-            text = j["text"]
-            end = j["end"]
-            start = j["start"]
-            total_frames = int((end - start) * self.fps)
-            start = start * self.fps
-            total_chars = len(text)
-            words = text.split(" ")
-            i = 0
-            
-            while i < len(words):
-                words[i] = words[i].strip()
-                if words[i] == "":
-                    i += 1
-                    continue
-                length_in_pixels = (len(words[i]) + 1) * self.char_width
-                remaining_pixels = width - length_in_pixels
-                line = words[i] 
-                
-                while remaining_pixels > 0:
-                    i += 1 
-                    if i >= len(words):
-                        break
-                    length_in_pixels = (len(words[i]) + 1) * self.char_width
-                    remaining_pixels -= length_in_pixels
-                    if remaining_pixels < 0:
-                        continue
-                    else:
-                        line += " " + words[i]
-                
-                line_array = [line, int(start) + 15, int(len(line) / total_chars * total_frames) + int(start) + 15]
-                start = int(len(line) / total_chars * total_frames) + int(start)
-                lines.append(line_array)
-                self.text_array.append(line_array)
+        process = subprocess.Popen(cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
+        _, stderr = process.communicate()
         
-        cap.release()
-        print('Transcription complete')
-    
+        # Look for "silence_end"
+        matches = re.findall(r"silence_end:\s*([0-9.]+)", stderr)
+        if matches:
+            return float(matches[0])  # First silence_end = start of speech
+        return 0.0
+
     def extract_audio(self):
         print('Extracting audio')
         audio_path = os.path.join(os.path.dirname(self.video_path), "audio.mp3")
@@ -85,8 +65,12 @@ class VideoTranscriber:
         print('Extracting frames')
         cap = cv2.VideoCapture(self.video_path)
         width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        self.width = width
         height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        asp = width / height
+        # asp = width / height
+        self.max_width = int(width * 0.8)  # Set max width for text wrapping 
+        # get the frames per second
+        self.fps = int(cap.get(cv2.CAP_PROP_FPS))
         N_frames = 0
         
         while True:
@@ -94,22 +78,60 @@ class VideoTranscriber:
             if not ret:
                 break
             
-            frame = frame[:, int(int(width - 1 / asp * height) / 2):width - int((width - 1 / asp * height) / 2)]
+            # frame = frame[:, int(int(width - 1 / asp * height) / 2):width - int((width - 1 / asp * height) / 2)]
             
-            for i in self.text_array:
-                if N_frames >= i[1] and N_frames <= i[2]:
-                    text = i[0]
-                    text_size, _ = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, 0.8, 2)
-                    text_x = int((frame.shape[1] - text_size[0]) / 2)
-                    text_y = int(height/2)
-                    cv2.putText(frame, text, (text_x, text_y), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
-                    break
-            
+            for segment in self.text_array:
+                start_frame = int(segment['start'] * self.fps)
+                end_frame = int(segment['end'] * self.fps)
+                if N_frames >= start_frame and N_frames <= end_frame:
+                    text = segment['text'].strip()
+                    if text:
+                        # Calculate position for text
+                        # TODO: org: Should be set by the user
+                        org = (10, height - 50)
+                        color = (255, 255, 255)  # White text
+                        self.put_multiline_text(frame, text, org, FONT, FONT_SCALE, color, FONT_THICKNESS, self.max_width)
             cv2.imwrite(os.path.join(output_folder, str(N_frames) + ".jpg"), frame)
             N_frames += 1
         
         cap.release()
         print('Frames extracted')
+
+    def wrap_text(self, text, font, font_scale, thickness, max_width):
+        """
+        Splits text into multiple lines so it fits inside max_width.
+        """
+        words = text.split()
+        lines = []
+        current_line = ""
+
+        for word in words:
+            test_line = current_line + " " + word if current_line else word
+            (w, h), _ = cv2.getTextSize(test_line, font, font_scale, thickness)
+            if w <= max_width:
+                current_line = test_line
+            else:
+                lines.append(current_line)
+                current_line = word
+
+        if current_line:
+            lines.append(current_line)
+
+        return lines
+
+    def put_multiline_text(self, img, text, org, font, font_scale, color, thickness, max_width, line_spacing=10):
+        """
+        Draw wrapped text (multi-line) on an image using cv2.putText.
+        org = (x, y) top-left corner of the text block.
+        """
+        x, y = org
+        lines = self.wrap_text(text, font, font_scale, thickness, max_width)
+
+        for line in lines:
+            (w, h), _ = cv2.getTextSize(line, font, font_scale, thickness)
+            x_centered = (self.width - w) // 2
+            cv2.putText(img, line, (x_centered, y), font, font_scale, color, thickness, lineType=cv2.LINE_AA)
+            y += h + line_spacing  # move down for next line
 
     def create_video(self, output_video_path):
         print('Creating video')
@@ -130,7 +152,7 @@ class VideoTranscriber:
         clip.audio = audio
         clip.write_videofile(output_video_path)
         shutil.rmtree(image_folder)
-        os.remove(os.path.join(os.path.dirname(self.video_path), "audio.mp3"))
+        # os.remove(os.path.join(os.path.dirname(self.video_path), "audio.mp3"))
 
 # Example usage
 model_path = "base"

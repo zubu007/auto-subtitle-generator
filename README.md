@@ -24,19 +24,20 @@ A program that generates subtitles in the format of instagram and facebook reels
 *** 
 
 ### TODO
-- [ ] Control number of words shown together with a variable
-- [ ] Add support for multiple languages
-- [ ] Add support for multiple video formats
-- [ ] Add support for multiple video resolutions
 - [ ] Add comments to the code
 - [ ] Update this read.me to make professional
-- [ ] Add option to select font color
-- [ ] Font size option
+
+- [ ] configure font solor selection to the main loop
+- [ ] configure text size selection to the main loop
+- [ ] configure font style selection to the main loop
+- [ ] Add option for y position of the text
+- [ ] add preview of the options selected.
 
 ### Done
 - [x] Create a GUI for the program
 - [x] Design UI for the program
 - [x] Create variables for text size and font.
+- [x] Text alignment in middle
 
 ### Issues
-* Subtitle alingment with the voice can be improved.
+* Fix overlapping text in the subtitles.

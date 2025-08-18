@@ -2,6 +2,7 @@
 from customtkinter import *
 from tkinter import filedialog
 import threading as th
+from CTkColorPicker import *
 
 #printing message before importing main
 print ("Starting...")
@@ -16,15 +17,21 @@ output_video_path = "" #path to the output video file
 app  = CTk ()
 app.title("Auto subtitle generator")
 #window resolution
-app.geometry("500x400")
+app.geometry("500x600")
 
 #Creating and placing the label that tells the user if a video is being created
 processLabel = CTkLabel(master=app, text="",font=("Arial" , 20), text_color="#FFCC70")
-processLabel.place(relx=0.5, rely=0.8,anchor="center")
+processLabel.place(relx=0.5, rely=0.9,anchor="center")
 
 #this label is at the very bottom and gives feedback to the player that the program is still running
 dotsLabel = CTkLabel(master=app, text="",font=("Arial" , 20), text_color="#FFCC70")
 dotsLabel.place(relx=0.5, rely=0.9,anchor="center")
+
+#Creating the button that will open the color picker
+def ask_color():
+    pick_color = AskColor() # open the color picker
+    color = pick_color.get() # get the color string
+    button.configure(fg_color=color)
 
 #Event handling methods
 #Selecting the video
@@ -57,6 +64,13 @@ def ProcessVideo ():
     if (video_path != ""):
         processLabel.configure(text="Creating video... ")
         processLabel.update()
+        try:
+            font_size_value = int(font_size_entry.get())
+        except ValueError:
+            processLabel.configure(text="Invalid font size. Please enter a number.")
+            processLabel.update()
+            return
+
         transcriber = VideoTranscriber(model.get(), video_path)
 
         transcriber.extract_audio()
@@ -100,8 +114,18 @@ model.place(relx=0.5, rely=0.4,anchor="center")
 font = CTkComboBox(master=app, values=["Arial" , "Times New Roman" , "Courier"])
 font.place(relx=0.5, rely=0.5,anchor="center")
 
+font_size_label = CTkLabel(master=app, text="Font size (px)", font=("Arial", 16), text_color="#FFCC70")
+font_size_label.place(relx=0.5, rely=0.6, anchor="center")
+
+font_size_entry = CTkEntry(master=app)
+font_size_entry.insert(0, "24")
+font_size_entry.place(relx=0.5, rely=0.7, anchor="center")
+
 processBtn = CTkButton(master=app, text="Process",command=StartVideoProcess)
-processBtn.place(relx=0.5, rely=0.7,anchor="center")
+processBtn.place(relx=0.5, rely=0.8,anchor="center")
+
+button = CTkButton(master=app, text="CHOOSE COLOR", text_color="black", command=ask_color)
+button.place(relx=0.5, rely=0.85, anchor="center")
 
 app.mainloop()
 
