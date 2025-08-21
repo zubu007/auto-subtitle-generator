@@ -27,7 +27,7 @@ A program that generates subtitles in the format of instagram and facebook reels
 - [ ] Add comments to the code
 - [ ] Update this read.me to make professional
 
-- [ ] configure font solor selection to the main loop
+- [ ] configure font color selection to the main loop
 - [ ] configure text size selection to the main loop
 - [ ] configure font style selection to the main loop
 - [ ] Add option for y position of the text
