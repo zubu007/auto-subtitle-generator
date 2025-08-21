@@ -31,7 +31,7 @@ dotsLabel.place(relx=0.5, rely=0.9,anchor="center")
 def ask_color():
     pick_color = AskColor() # open the color picker
     color = pick_color.get() # get the color string
-    button.configure(fg_color=color)
+    color_button.configure(fg_color=color)
 
 #Event handling methods
 #Selecting the video
@@ -71,7 +71,13 @@ def ProcessVideo ():
             processLabel.update()
             return
 
-        transcriber = VideoTranscriber(model.get(), video_path)
+        print("Selected model:", model.get())
+        print("Selected font:", font.get())
+        print("Selected font size:", font_size_value)
+        print("Selected color:", color_button.cget("fg_color"))
+        hex_color = color_button.cget("fg_color")
+        rgb_color = tuple(int(hex_color.lstrip('#')[i:i+2], 16) for i in (0, 2, 4))
+        transcriber = VideoTranscriber(model.get(), video_path, rgb_color, font_size_value, font.get(), y_axis=int(y_axis_entry.get()))
 
         transcriber.extract_audio()
         processLabel.configure(text="Extracting audio... ")
@@ -119,13 +125,19 @@ font_size_label.place(relx=0.5, rely=0.6, anchor="center")
 
 font_size_entry = CTkEntry(master=app)
 font_size_entry.insert(0, "24")
-font_size_entry.place(relx=0.5, rely=0.7, anchor="center")
+font_size_entry.place(relx=0.5, rely=0.65, anchor="center")
+
+y_axis_label = CTkLabel(master=app, text="Y-axis position (px)", font=("Arial", 16), text_color="#FFCC70")
+y_axis_label.place(relx=0.5, rely=0.7, anchor="center")
+y_axis_entry = CTkEntry(master=app)
+y_axis_entry.insert(0, "50")
+y_axis_entry.place(relx=0.5, rely=0.75, anchor="center")
 
 processBtn = CTkButton(master=app, text="Process",command=StartVideoProcess)
 processBtn.place(relx=0.5, rely=0.8,anchor="center")
 
-button = CTkButton(master=app, text="CHOOSE COLOR", text_color="black", command=ask_color)
-button.place(relx=0.5, rely=0.85, anchor="center")
+color_button = CTkButton(master=app, text="CHOOSE COLOR", text_color="black", command=ask_color)
+color_button.place(relx=0.5, rely=0.85, anchor="center")
 
 app.mainloop()
 

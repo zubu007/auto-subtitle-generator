@@ -27,13 +27,14 @@ A program that generates subtitles in the format of instagram and facebook reels
 - [ ] Add comments to the code
 - [ ] Update this read.me to make professional
 
-- [ ] configure font color selection to the main loop
-- [ ] configure text size selection to the main loop
-- [ ] configure font style selection to the main loop
-- [ ] Add option for y position of the text
 - [ ] add preview of the options selected.
+- [ ] Fix audio sync issue. (Maybe FPS is the problem.)
 
 ### Done
+- [x] configure font color selection to the main loop
+- [x] configure text size selection to the main loop
+- [x] configure font style selection to the main loop
+- [x] Add option for y position of the text
 - [x] Create a GUI for the program
 - [x] Design UI for the program
 - [x] Create variables for text size and font.

@@ -12,9 +12,14 @@ FONT_SCALE = 0.8
 FONT_THICKNESS = 2
 
 class VideoTranscriber:
-    def __init__(self, model_path, video_path):
+    def __init__(self, model_path, video_path, text_color, text_size, text_font, y_axis=0):
         self.model = whisper.load_model(model_path)
         self.video_path = video_path
+        self.text_color = text_color
+        self.text_size = text_size
+        self.text_font = text_font
+        self.y_axis = y_axis
+
         self.audio_path = ''
         self.text_array = []
         self.fps = 0
@@ -88,9 +93,9 @@ class VideoTranscriber:
                     if text:
                         # Calculate position for text
                         # TODO: org: Should be set by the user
-                        org = (10, height - 50)
-                        color = (255, 255, 255)  # White text
-                        self.put_multiline_text(frame, text, org, FONT, FONT_SCALE, color, FONT_THICKNESS, self.max_width)
+                        org = (10, height - 10 - self.y_axis)  # Bottom-left corner with y-axis offset
+                        color = self.text_color
+                        self.put_multiline_text(frame, text, org, FONT, self.text_size, color, FONT_THICKNESS, self.max_width)
             cv2.imwrite(os.path.join(output_folder, str(N_frames) + ".jpg"), frame)
             N_frames += 1
         
@@ -149,7 +154,8 @@ class VideoTranscriber:
         
         clip = ImageSequenceClip([os.path.join(image_folder, image) for image in images], fps=self.fps)
         audio = AudioFileClip(self.audio_path)
-        clip.audio = audio
+        # clip.audio = audio
+        clip = clip.with_audio(audio)
         clip.write_videofile(output_video_path)
         shutil.rmtree(image_folder)
         # os.remove(os.path.join(os.path.dirname(self.video_path), "audio.mp3"))
