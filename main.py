@@ -154,9 +154,3 @@ class VideoTranscriber:
         shutil.rmtree(image_folder)
         # os.remove(os.path.join(os.path.dirname(self.video_path), "audio.mp3"))
 
-# Example usage
-model_path = "base"
-# video_path = "test_videos/videoplayback.mp4"
-output_video_path = "output.mp4"
-# output_audio_path = "test_videos/audio.mp3"
-    
