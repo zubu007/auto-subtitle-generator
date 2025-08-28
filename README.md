@@ -28,9 +28,12 @@ A program that generates subtitles in the format of instagram and facebook reels
 - [ ] Update this read.me to make professional
 
 - [ ] add preview of the options selected.
-- [ ] Fix audio sync issue. (Maybe FPS is the problem.)
+- [ ] clean up the old commented code.
+- [ ] Add option for background color of the text box.
+- [ ] Word level timestamps.
 
 ### Done
+- [x] Fix audio sync issue. (Maybe FPS is the problem.)
 - [x] configure font color selection to the main loop
 - [x] configure text size selection to the main loop
 - [x] configure font style selection to the main loop
@@ -42,3 +45,7 @@ A program that generates subtitles in the format of instagram and facebook reels
 
 ### Issues
 * Fix overlapping text in the subtitles.
+
+### Notes
+* Completely removed OpenCV and used only moviepy for the subtitle putting.
+* I think I should look into whisperX or stable-ts or whisper-timestamped for word level timestamps.

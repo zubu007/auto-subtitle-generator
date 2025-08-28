@@ -76,18 +76,18 @@ def ProcessVideo ():
         print("Selected font size:", font_size_value)
         print("Selected color:", color_button.cget("fg_color"))
         hex_color = color_button.cget("fg_color")
-        rgb_color = tuple(int(hex_color.lstrip('#')[i:i+2], 16) for i in (0, 2, 4))
-        transcriber = VideoTranscriber(model.get(), video_path, rgb_color, font_size_value, font.get(), y_axis=int(y_axis_entry.get()))
+        # rgb_color = tuple(int(hex_color.lstrip('#')[i:i+2], 16) for i in (0, 2, 4))
+        transcriber = VideoTranscriber(model.get(), video_path, hex_color, font_size_value, font.get(), y_axis=int(y_axis_entry.get()))
 
-        transcriber.extract_audio()
-        processLabel.configure(text="Extracting audio... ")
-        processLabel.update()
+        # transcriber.extract_audio()
+        # processLabel.configure(text="Extracting audio... ")
+        # processLabel.update()
 
         transcriber.transcribe_video()
         processLabel.configure(text="Transcribing video... ")
         processLabel.update()
 
-        transcriber.create_video(output_video_path)
+        transcriber.create_video_with_subtitles()
         processLabel.configure(text="Video created at: " + output_video_path)
         processLabel.update()
         processing = False
